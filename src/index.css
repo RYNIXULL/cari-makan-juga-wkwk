@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-brand-primary: #10B981;       /* Contoh: Hijau */
+    --color-brand-primary-hover: #059669; /* Hijau Tua */
+    --color-brand-accent: #F43F5E;        /* Merah Jambu */
+  }
+}
