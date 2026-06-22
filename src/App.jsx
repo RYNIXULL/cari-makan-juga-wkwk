@@ -1,28 +1,32 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ToastProvider } from './features/toast/ToastContext';
+import { CartProvider } from './features/cart/CartContext';
+import { AuthProvider } from './features/auth/AuthContext';
+import { MainLayout } from './shared/layouts/MainLayout';
 import Home from './pages/Home';
 import FoodDetail from './pages/FoodDetail';
+import { LoginPage } from './features/auth/LoginPage';
+import { RegisterPage } from './features/auth/RegisterPage';
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-          <Header />
-{/* Ubah flex-grow menjadi grow */}
-<main className="grow container mx-auto px-4 py-6">
-  <Routes>
-    <Route path="/" element={<Home />} />
-    <Route path="/detail/:id" element={<FoodDetail />} />
-  </Routes>
-</main>
-          <Footer />
-        </div>
-      </Router>
-    </CartProvider>
+    <BrowserRouter>
+      <ToastProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Routes>
+              <Route element={<MainLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/detail/:id" element={<FoodDetail />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+              </Route>
+            </Routes>
+          </CartProvider>
+        </AuthProvider>
+      </ToastProvider>
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  favorites Favorite[]
+  carts     Cart[]
+  orders    Order[]
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  mealId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String @id @default(uuid())
+  cartId    String
+  mealId    String
+  mealName  String
+  mealImage String
+  quantity  Int    @default(1)
+  cart      Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+}
+
+model Order {
+  id        String      @id @default(uuid())
+  userId    String
+  total     Int
+  status    String      @default("pending") // pending, paid, completed, cancelled
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String @id @default(uuid())
+  orderId   String
+  mealId    String
+  mealName  String
+  mealImage String
+  quantity  Int    @default(1)
+  order     Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
