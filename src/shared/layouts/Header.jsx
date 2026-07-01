@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChefHat, ShoppingCart, Menu, X, LogIn, LogOut, User } from 'lucide-react';
+import { ChefHat, ShoppingCart, Menu, X, LogIn, LogOut, User, Package } from 'lucide-react';
 import { useCart } from '../../features/cart/CartContext';
 import { useAuth } from '../../features/auth/useAuth';
 import { Button } from '../ui/button/Button';
 import { motion } from 'framer-motion';
 
 export const Header = () => {
-  const { totalItems } = useCart();
+  const { totalItems, setIsCartOpen } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -33,7 +33,12 @@ export const Header = () => {
                 Admin Panel
               </Button>
             )}
-            <Button variant="ghost" className="relative p-2 px-3">
+            {user && (
+              <Button variant="ghost" size="sm" onClick={() => navigate('/orders')} className="text-slate-600" leftIcon={<Package className="w-4 h-4" />}>
+                Pesanan
+              </Button>
+            )}
+            <Button variant="ghost" className="relative p-2 px-3" onClick={() => setIsCartOpen(true)}>
               <ShoppingCart className="w-5 h-5 text-ocean-600" />
               {totalItems > 0 && (
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-rose-500 rounded-full">

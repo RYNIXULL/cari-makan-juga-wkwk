@@ -5,6 +5,7 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const { addToast } = useToast();
 
   const addToCart = (item) => {
@@ -20,33 +21,47 @@ export function CartProvider({ children }) {
     addToast(`"${item.name}" ditambahkan ke keranjang!`, 'success');
   };
 
-  const checkout = async () => {
-    if (cart.length === 0) return;
-    try {
-      const response = await fetch('https://server-flax-seven-93.vercel.app/api/orders/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          items: cart, 
-          totalAmount: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) 
-        })
-      });
-      const data = await response.json();
-      if (data.status === 'success') {
-        addToast(`Pesanan berhasil! ID: ${data.data.orderId}`, 'success');
-        setCart([]); // Clear cart
-      } else {
-        addToast(data.message || 'Gagal memproses pesanan', 'error');
-      }
-    } catch (err) {
-      addToast('Koneksi ke backend terputus saat checkout', 'error');
+  const updateQuantity = (itemId, newQty) => {
+    if (newQty < 1) {
+      removeFromCart(itemId);
+      return;
     }
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQty } : item
+      )
+    );
+  };
+
+  const removeFromCart = (itemId) => {
+    setCart((prevCart) => {
+      const item = prevCart.find((i) => i.id === itemId);
+      if (item) {
+        addToast(`"${item.name}" dihapus dari keranjang.`, 'info');
+      }
+      return prevCart.filter((i) => i.id !== itemId);
+    });
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const subtotal = cart.reduce((sum, item) => sum + (25000 * item.quantity), 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, checkout, totalItems }}>
+    <CartContext.Provider value={{
+      cart,
+      addToCart,
+      updateQuantity,
+      removeFromCart,
+      clearCart,
+      totalItems,
+      subtotal,
+      isCartOpen,
+      setIsCartOpen
+    }}>
       {children}
     </CartContext.Provider>
   );

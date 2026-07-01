@@ -9,6 +9,10 @@ import FoodDetail from './pages/FoodDetail';
 import { LoginPage } from './features/auth/LoginPage';
 import { RegisterPage } from './features/auth/RegisterPage';
 import AdminDashboard from './pages/AdminDashboard';
+import CheckoutPage from './pages/CheckoutPage';
+import PaymentPage from './pages/PaymentPage';
+import OrdersPage from './pages/OrdersPage';
+import OrderDetailPage from './pages/OrderDetailPage';
 
 function App() {
   return (
@@ -23,6 +27,10 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/payment/:orderId" element={<PaymentPage />} />
+                <Route path="/orders" element={<OrdersPage />} />
+                <Route path="/orders/:id" element={<OrderDetailPage />} />
               </Route>
             </Routes>
           </CartProvider>

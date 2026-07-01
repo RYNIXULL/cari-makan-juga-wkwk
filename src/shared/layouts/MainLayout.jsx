@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Outlet } from 'react-router-dom';
 import { Header } from './Header';
 import { Footer } from './Footer';
+import { CartDrawer } from '../../features/cart/CartDrawer';
 
 export const MainLayout = () => {
   return (
@@ -20,7 +21,7 @@ export const MainLayout = () => {
         </motion.main>
       </div>
       <Footer />
+      <CartDrawer />
     </div>
   );
 };
-

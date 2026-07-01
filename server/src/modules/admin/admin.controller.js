@@ -1,5 +1,12 @@
 const prisma = require('../../lib/prisma');
 
+// Valid admin state transitions
+const ADMIN_TRANSITIONS = {
+  paid: ['processing'],
+  processing: ['shipped'],
+  shipped: ['delivered']
+};
+
 exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
@@ -30,18 +37,38 @@ exports.getAllOrders = async (req, res, next) => {
 exports.updateOrderStatus = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status: newStatus } = req.body;
 
-    if (!['pending', 'paid', 'completed', 'cancelled'].includes(status)) {
-      return res.status(400).json({ status: 'fail', message: 'Status order tidak valid.' });
+    const order = await prisma.order.findUnique({ where: { id } });
+
+    if (!order) {
+      return res.status(404).json({ status: 'fail', message: 'Pesanan tidak ditemukan.' });
     }
 
-    const order = await prisma.order.update({
+    // Check if transition is valid
+    const allowedTransitions = ADMIN_TRANSITIONS[order.status];
+
+    if (!allowedTransitions || !allowedTransitions.includes(newStatus)) {
+      return res.status(400).json({
+        status: 'fail',
+        message: `Tidak bisa mengubah status dari "${order.status}" ke "${newStatus}". Transisi yang valid: ${allowedTransitions ? allowedTransitions.join(', ') : 'tidak ada'}.`
+      });
+    }
+
+    const updatedOrder = await prisma.order.update({
       where: { id },
-      data: { status }
+      data: { status: newStatus },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        items: true
+      }
     });
 
-    res.status(200).json({ status: 'success', data: order });
+    res.status(200).json({
+      status: 'success',
+      message: `Status pesanan berhasil diubah ke "${newStatus}".`,
+      data: updatedOrder
+    });
   } catch (error) {
     next(error);
   }
