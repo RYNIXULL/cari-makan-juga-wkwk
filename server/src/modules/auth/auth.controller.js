@@ -40,13 +40,13 @@ exports.login = async (req, res, next) => {
       return res.status(401).json({ status: 'fail', message: 'Email atau password salah.' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     res.status(200).json({
       status: 'success',
       data: {
         token,
-        user: { id: user.id, name: user.name, email: user.email }
+        user: { id: user.id, name: user.name, email: user.email, role: user.role }
       }
     });
   } catch (error) {
@@ -58,7 +58,7 @@ exports.getMe = async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user.id },
-      select: { id: true, name: true, email: true, createdAt: true }
+      select: { id: true, name: true, email: true, role: true, createdAt: true }
     });
 
     if (!user) {

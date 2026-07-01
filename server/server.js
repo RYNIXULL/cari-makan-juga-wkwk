@@ -8,7 +8,7 @@ const foodsRoutes = require('./src/modules/foods/foods.routes');
 const favoritesRoutes = require('./src/modules/favorites/favorites.routes');
 const cartRoutes = require('./src/modules/cart/cart.routes');
 const ordersRoutes = require('./src/modules/orders/orders.routes');
-
+const adminRoutes = require('./src/modules/admin/admin.routes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -21,7 +21,7 @@ app.use('/api/foods', foodsRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', ordersRoutes);
-
+app.use('/api/admin', adminRoutes);
 // Global Error Handler
 app.use(errorHandler);
 

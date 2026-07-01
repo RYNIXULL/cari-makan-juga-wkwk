@@ -28,6 +28,11 @@ export const Header = () => {
 
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center space-x-4">
+            {user && user.role === 'admin' && (
+              <Button variant="outline" size="sm" onClick={() => navigate('/admin')} className="border-ocean-500 text-ocean-600">
+                Admin Panel
+              </Button>
+            )}
             <Button variant="ghost" className="relative p-2 px-3">
               <ShoppingCart className="w-5 h-5 text-ocean-600" />
               {totalItems > 0 && (
