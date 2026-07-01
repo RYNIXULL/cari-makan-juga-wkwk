@@ -23,7 +23,7 @@ export function CartProvider({ children }) {
   const checkout = async () => {
     if (cart.length === 0) return;
     try {
-      const response = await fetch('http://localhost:5000/api/orders/checkout', {
+      const response = await fetch('https://server-flax-seven-93.vercel.app/api/orders/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

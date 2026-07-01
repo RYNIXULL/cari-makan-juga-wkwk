@@ -22,7 +22,7 @@ function FoodDetail() {
     const fetchFoodDetail = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5000/api/foods/${id}`);
+        const response = await fetch(`https://server-flax-seven-93.vercel.app/api/foods/${id}`);
         const json = await response.json();
         if (json.status === 'success') setFood(json.data);
       } catch (err) {

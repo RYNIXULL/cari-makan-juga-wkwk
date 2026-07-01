@@ -67,8 +67,8 @@ function Home() {
         setLoading(true);
         setError(null);
         const endpoint = query 
-          ? `http://localhost:5000/api/foods/search?q=${query}`
-          : 'http://localhost:5000/api/foods/search?q=';
+          ? `https://server-flax-seven-93.vercel.app/api/foods/search?q=${query}`
+          : 'https://server-flax-seven-93.vercel.app/api/foods/search?q=';
         const response = await fetch(endpoint);
         const json = await response.json();
         setFoods(json.data || []);
