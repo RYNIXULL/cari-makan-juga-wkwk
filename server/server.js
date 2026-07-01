@@ -25,6 +25,10 @@ app.use('/api/orders', ordersRoutes);
 // Global Error Handler
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`[Server] Running beautifully on http://localhost:${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`[Server] Running beautifully on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
